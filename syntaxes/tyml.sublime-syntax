@@ -1,0 +1,229 @@
+%YAML 1.2
+---
+name: Tyml
+file_extensions: [tyml]
+scope: source.tyml
+
+# ---------------------------------------------------------------------------
+#  Variables  ---------------------------------------------------------------
+# ---------------------------------------------------------------------------
+variables:
+  ident: '[A-Za-z_][A-Za-z0-9_]*'
+  number: '\d+'
+  range_op: '\\.\\.(?:=|<)?'   # ..  ..=  ..<
+
+# ---------------------------------------------------------------------------
+#  Contexts  ----------------------------------------------------------------
+# ---------------------------------------------------------------------------
+contexts:
+  # ==== entry ==============================================================
+  main:
+    - include: skp-line           # parses whitespace + comments at top level
+
+    # keyword-driven blocks --------------------------------------------------
+    - match: '\btype\b'
+      scope: keyword.declaration.type.tyml
+      push: type-decl
+
+    - match: '\benum\b'
+      scope: keyword.declaration.enum.tyml
+      push: enum-decl
+
+    # setting key (top-level inline struct) ---------------------------------
+    - match: '{{ident}}(?=\s*:)'  # setting name
+      scope: variable.other.member.tyml
+      push: value-decl
+
+    - include: literals
+
+  # -----------------------------------------------------------------------
+  #  Whitespace helpers  ---------------------------------------------------
+  # -----------------------------------------------------------------------
+  ws-inline:
+    - match: '[ \t]+'
+      scope: text.whitespace
+
+  ws-line:
+    - match: '\s+'
+      scope: text.whitespace
+
+  # -----------------------------------------------------------------------
+  #  Comments  -------------------------------------------------------------
+  # -----------------------------------------------------------------------
+  comment-doc:
+    - match: '///'
+      scope: punctuation.definition.comment.tyml
+      push: comment-doc-body
+
+  comment-line:
+    - match: '//'
+      scope: punctuation.definition.comment.tyml
+      push: comment-line-body
+
+  comment-line-body:
+    - meta_scope: comment.line.double-slash.tyml
+    - match: '\n'
+      pop: true
+
+  comment-doc-body:
+    - meta_scope: comment.line.documentation.tyml
+    - match: '\n'
+      pop: true
+
+  skp-inline:
+    - include: ws-inline
+    - include: comment-doc
+    - include: comment-line
+
+  skp-line:
+    - include: ws-line
+    - include: comment-doc
+    - include: comment-line
+
+  # -----------------------------------------------------------------------
+  #  type  -----------------------------------------------------------------
+  # -----------------------------------------------------------------------
+  type-decl:
+    - include: skp-inline
+    - match: '{{ident}}'
+      scope: entity.name.type.tyml
+      set: type-after-name
+
+  type-after-name:
+    - include: skp-inline
+    - match: '{'
+      scope: punctuation.section.block.begin.tyml
+      set: type-body
+
+  type-body:
+    - meta_scope: meta.block.type.tyml
+    - include: object-elements
+
+  # -----------------------------------------------------------------------
+  #  enum  -----------------------------------------------------------------
+  # -----------------------------------------------------------------------
+  enum-decl:
+    - include: skp-inline
+    - match: '{{ident}}'
+      scope: entity.name.type.enum.tyml
+      set: enum-after-name
+
+  enum-after-name:
+    - include: skp-inline
+    - match: '{'
+      scope: punctuation.section.block.begin.tyml
+      set: enum-body
+
+  enum-body:
+    - meta_scope: meta.block.enum.tyml
+    - include: skp-line
+
+    - match: '"[^"\\]*(?:\\.[^"\\]*)*"'
+      scope: string.quoted.double.enum.tyml
+
+    - match: '}'
+      scope: punctuation.section.block.end.tyml
+      pop: true
+
+  # -----------------------------------------------------------------------
+  #  Property / Value ------------------------------------------------------
+  # -----------------------------------------------------------------------
+  value-decl:
+    - include: skp-inline
+    - match: ':'
+      scope: punctuation.separator.key-value.tyml
+      set: type-spec
+
+  # --- union / inline struct / attrs / default ---------------------------
+  type-spec:
+    - include: skp-inline
+
+    # explicit type name segment -----------------------------------------
+    - match: '{{ident}}'
+      scope: storage.type.tyml
+
+    # union operator ------------------------------------------------------
+    - match: '\|'
+      scope: keyword.operator.union.tyml
+
+    # inline struct -------------------------------------------------------
+    - match: '{'
+      scope: punctuation.section.block.begin.tyml
+      push: inline-struct
+
+    # attribute list ------------------------------------------------------
+    - match: '@'
+      scope: keyword.operator.attribute.tyml
+      push: attribute
+
+    # default value -------------------------------------------------------
+    - match: '='
+      scope: punctuation.separator.key-value.default.tyml
+      set: default-value
+
+    # declaration terminator ---------------------------------------------
+    - match: '(?=,|\n|})'
+      pop: true
+
+  # --- inline struct context ---------------------------------------------
+  inline-struct:
+    - meta_scope: meta.block.inline-struct.tyml
+    - include: object-elements
+    - match: '}'
+      scope: punctuation.section.block.end.tyml
+      pop: true
+
+  # --- attribute chain ----------------------------------------------------
+  attribute:
+    - include: skp-inline
+
+    - match: '\b(in|length|regex)\b'
+      scope: keyword.other.attribute.tyml
+
+    - match: '{{range_op}}'
+      scope: keyword.operator.range.tyml
+
+    - include: literals
+
+    - match: '(?=@|=|,|\n|})'
+      pop: true
+
+  default-value:
+    - include: skp-inline
+    - include: literals
+    - match: '(?=,|\n|})'
+      pop: true
+
+  # -----------------------------------------------------------------------
+  #  Object elements -------------------------------------------------------
+  # -----------------------------------------------------------------------
+  object-elements:
+    - include: skp-line
+
+    - match: '{{ident}}(?=\s*:)'  # member key
+      scope: variable.other.member.tyml
+      push: value-decl
+
+    - match: ','
+      scope: punctuation.separator.comma.tyml
+
+    - match: '}'
+      scope: punctuation.section.block.end.tyml
+      pop: true
+
+  # -----------------------------------------------------------------------
+  #  Literals --------------------------------------------------------------
+  # -----------------------------------------------------------------------
+  literals:
+    - match: '"'
+      scope: punctuation.definition.string.begin.tyml
+      push: dq-string
+
+    - match: '{{number}}'
+      scope: constant.numeric.integer.tyml
+
+  dq-string:
+    - meta_scope: string.quoted.double.tyml
+    - match: '"'
+      scope: punctuation.definition.string.end.tyml
+      pop: true
