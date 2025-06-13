@@ -63,6 +63,20 @@ type Setting {
 
 原則として、インデントはスペース4つを推奨しますが、タブ文字も構文上は有効です
 
+### 任意の要素を持たせたい場合
+```tyml
+// settingの場合はstring、それ以外の要素はint型に限定される
+setting: string
+// *を記述しない場合は、任意の要素を記述することは許可されません
+*: int
+```
+```toml
+# !tyml example.tyml
+setting = "string"
+# *を定義したことにより任意の要素を記述できるようになる
+user_element = 100
+```
+
 ## enum型
 enum型を宣言することで、文字列の値を制限することも可能です
 ```tyml
