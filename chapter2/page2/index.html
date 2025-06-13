@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      
+    
+
+      <title></title>
+
+      
+      
+
+      <!-- CSS -->
+      
+      <link rel="stylesheet" href="https://tyml-org.github.io/tyml-docs-jp/book.css">
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="menu">
+            
+            
+            <nav role="navigation">
+                <ul>
+                    
+                    
+                    
+                    
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <li >
+                            
+                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter1/">
+                                <strong>1.</strong>
+                                はじめに
+                            </a>
+                
+                            
+                            
+                        </li>
+                    
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                            
+                        
+                            
+                                
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                        
+                        <li >
+                            
+                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/">
+                                <strong>2.</strong>
+                                TYMLの仕様
+                            </a>
+                
+                            
+                            
+                                <ul>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/page1/">
+                                                
+                                                    <strong>2.1.</strong>
+                                                
+                                                基本形
+                                            </a>
+                                        </li>
+                                    
+                                        <li class="active">
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/page2/">
+                                                
+                                                    <strong>2.2.</strong>
+                                                
+                                                or型
+                                            </a>
+                                        </li>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/page3/">
+                                                
+                                                    <strong>2.3.</strong>
+                                                
+                                                配列
+                                            </a>
+                                        </li>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/page4/">
+                                                
+                                                    <strong>2.4.</strong>
+                                                
+                                                Optional型?
+                                            </a>
+                                        </li>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/page5/">
+                                                
+                                                    <strong>2.5.</strong>
+                                                
+                                                EBNF
+                                            </a>
+                                        </li>
+                                    
+                                </ul>
+                            
+                        </li>
+                    
+                
+
+                </ul>
+            </nav>
+            
+            
+        </div>
+
+        <div class="page">
+            <div class="page__header">
+                <div class="menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
+                <span class="search-icon">🔎</span>
+                
+            </div>
+
+            <div class="page__content">
+                
+                <div class="search-container">
+                    <input id="search" type="search" placeholder="Search..">
+                    <div class="search-results">
+                        <div class="search-results__header"></div>
+                        <ul class="search-results__items"></ul>
+                    </div>
+                </div>
+                
+                <div class="book-content">
+                    
+    <h1>or型</h1>
+    <h2 id="orxing">or型<a class="zola-anchor" href="#orxing" aria-label="Anchor link for: orxing">🔗</a></h2>
+<p>TYMLでは、どちらかの型を許可したいというケースにも対応できるように設計されています</p>
+<pre data-lang="tyml" class="language-tyml z-code"><code class="language-tyml" data-lang="tyml"><span class="z-source z-tyml"><span class="z-comment z-line z-documentation z-tyml"><span class="z-punctuation z-definition z-comment z-tyml">///</span> int型もしくはstring型の値を許可する
+</span></span><span class="z-source z-tyml"><span class="z-variable z-other z-member z-tyml">setting</span><span class="z-punctuation z-separator z-key-value z-tyml">:</span><span class="z-text z-whitespace"> </span><span class="z-storage z-type z-tyml">int</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-union z-tyml">|</span><span class="z-text z-whitespace"> </span><span class="z-storage z-type z-tyml">string</span><span class="z-text z-whitespace">
+</span></span></code></pre>
+<ul>
+<li>TOMLの場合</li>
+</ul>
+<pre data-lang="toml" class="language-toml z-code"><code class="language-toml" data-lang="toml"><span class="z-source z-toml"><span class="z-comment z-line z-number-sign z-toml"><span class="z-punctuation z-definition z-comment z-toml">#</span> !tyml example.tyml</span>
+</span><span class="z-source z-toml"><span class="z-meta z-tag z-key z-toml"><span class="z-entity z-name z-tag z-toml">setting</span></span> <span class="z-punctuation z-definition z-key-value z-toml">=</span> <span class="z-constant z-numeric z-integer z-toml">100</span>
+</span></code></pre>
+<pre data-lang="toml" class="language-toml z-code"><code class="language-toml" data-lang="toml"><span class="z-source z-toml"><span class="z-comment z-line z-number-sign z-toml"><span class="z-punctuation z-definition z-comment z-toml">#</span> !tyml example.tyml</span>
+</span><span class="z-source z-toml"><span class="z-meta z-tag z-key z-toml"><span class="z-entity z-name z-tag z-toml">setting</span></span> <span class="z-punctuation z-definition z-key-value z-toml">=</span> <span class="z-string z-quoted z-double z-basic z-toml"><span class="z-punctuation z-definition z-string z-begin z-toml">&quot;</span>string<span class="z-punctuation z-definition z-string z-end z-toml">&quot;</span></span>
+</span></code></pre>
+<p>どちらも有効です</p>
+
+
+                </div>
+            </div>
+
+            <div class="prev-link">
+                
+    
+        
+        
+        <a class="previous" href="https://tyml-org.github.io/tyml-docs-jp/chapter2/"><</a>
+    
+
+            </div>
+
+            <div class="next-link">
+                
+    
+        <a class="next" href="https://tyml-org.github.io/tyml-docs-jp/chapter2/page3/">></a>
+    
+
+            </div>
+        </div>
+
+        
+            
+            <script type="text/javascript" src="https://tyml-org.github.io/tyml-docs-jp/elasticlunr.min.js"></script>
+            <script type="text/javascript" src="https://tyml-org.github.io/tyml-docs-jp/search_index.en.js"></script>
+            
+            <script type="text/javascript" src="https://tyml-org.github.io/tyml-docs-jp/book.js"></script>
+        
+    </body>
+
+</html>
