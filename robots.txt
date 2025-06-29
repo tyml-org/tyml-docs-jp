@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+Allow: /
+Sitemap: https://tyml-org.github.io/tyml-docs-jp/sitemap.xml

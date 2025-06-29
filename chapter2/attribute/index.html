@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      
+    
+
+      <title></title>
+
+      
+      
+
+      <!-- CSS -->
+      
+      <link rel="stylesheet" href="https://tyml-org.github.io/tyml-docs-jp/book.css">
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="menu">
+            
+            
+            <nav role="navigation">
+                <ul>
+                    
+                    
+                    
+                    
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <li >
+                            
+                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter1/">
+                                <strong>1.</strong>
+                                はじめに
+                            </a>
+                
+                            
+                            
+                        </li>
+                    
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                
+                            
+                        
+                            
+                        
+                        
+                        <li >
+                            
+                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/">
+                                <strong>2.</strong>
+                                TYMLの仕様
+                            </a>
+                
+                            
+                            
+                                <ul>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/base/">
+                                                
+                                                    <strong>2.1.</strong>
+                                                
+                                                基本形
+                                            </a>
+                                        </li>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/or/">
+                                                
+                                                    <strong>2.2.</strong>
+                                                
+                                                or型
+                                            </a>
+                                        </li>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/array/">
+                                                
+                                                    <strong>2.3.</strong>
+                                                
+                                                配列
+                                            </a>
+                                        </li>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/optional/">
+                                                
+                                                    <strong>2.4.</strong>
+                                                
+                                                Optional型?
+                                            </a>
+                                        </li>
+                                    
+                                        <li class="active">
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/attribute/">
+                                                
+                                                    <strong>2.5.</strong>
+                                                
+                                                篩型
+                                            </a>
+                                        </li>
+                                    
+                                        <li >
+                                            <a href="https://tyml-org.github.io/tyml-docs-jp/chapter2/ebnf/">
+                                                
+                                                    <strong>2.6.</strong>
+                                                
+                                                EBNF
+                                            </a>
+                                        </li>
+                                    
+                                </ul>
+                            
+                        </li>
+                    
+                
+
+                </ul>
+            </nav>
+            
+            
+        </div>
+
+        <div class="page">
+            <div class="page__header">
+                <div class="menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
+                <span class="search-icon">🔎</span>
+                
+            </div>
+
+            <div class="page__content">
+                
+                <div class="search-container">
+                    <input id="search" type="search" placeholder="Search..">
+                    <div class="search-results">
+                        <div class="search-results__header"></div>
+                        <ul class="search-results__items"></ul>
+                    </div>
+                </div>
+                
+                <div class="book-content">
+                    
+    <h1>篩型</h1>
+    <h2 id="shai-xing-huruigata">篩型(ふるいがた)<a class="zola-anchor" href="#shai-xing-huruigata" aria-label="Anchor link for: shai-xing-huruigata">🔗</a></h2>
+<p>TYMLでは型に追加の制約を課すことができます</p>
+<pre data-lang="tyml" class="language-tyml z-code"><code class="language-tyml" data-lang="tyml"><span class="z-source z-tyml"><span class="z-variable z-other z-member z-tyml">port</span><span class="z-punctuation z-separator z-key-value z-tyml">:</span><span class="z-text z-whitespace"> </span><span class="z-storage z-type z-tyml">int</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-attribute z-tyml">@</span><span class="z-keyword z-operator z-attribute z-tyml">value</span><span class="z-text z-whitespace"> </span><span class="z-constant z-numeric z-integer z-tyml">100</span>..&lt;<span class="z-constant z-numeric z-integer z-tyml">200</span><span class="z-text z-whitespace">
+</span></span></code></pre>
+<h2 id="valueatoribiyuto"><code>@value</code>アトリビュート<a class="zola-anchor" href="#valueatoribiyuto" aria-label="Anchor link for: valueatoribiyuto">🔗</a></h2>
+<p>数値型である<code>int</code>・<code>uint</code>・<code>float</code>のいずれかで使用することができます</p>
+<pre data-lang="tyml" class="language-tyml z-code"><code class="language-tyml" data-lang="tyml"><span class="z-source z-tyml"><span class="z-variable z-other z-member z-tyml">setting</span><span class="z-punctuation z-separator z-key-value z-tyml">:</span><span class="z-text z-whitespace"> </span><span class="z-storage z-type z-tyml">int</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-attribute z-tyml">@</span><span class="z-keyword z-operator z-attribute z-tyml">value</span><span class="z-text z-whitespace"> </span><span class="z-constant z-numeric z-integer z-tyml">0</span>..&lt;<span class="z-constant z-numeric z-integer z-tyml">100</span><span class="z-text z-whitespace">
+</span></span></code></pre>
+<p><code>0..&lt;100</code>のように範囲を指定することができ、記述方法は以下のとおりです</p>
+<ul>
+<li><code>start..&lt;end</code>: start以上end未満</li>
+<li><code>start..=end</code>: start以上end以下</li>
+<li><code>start..</code>: start以上</li>
+<li><code>..&lt;end</code>: end未満</li>
+<li><code>..=end</code>: end以下</li>
+</ul>
+<h2 id="lengthatoribiyuto"><code>@length</code>アトリビュート<a class="zola-anchor" href="#lengthatoribiyuto" aria-label="Anchor link for: lengthatoribiyuto">🔗</a></h2>
+<p>文字列型<code>string</code>のUnicode文字数を制限することができます</p>
+<pre data-lang="tyml" class="language-tyml z-code"><code class="language-tyml" data-lang="tyml"><span class="z-source z-tyml"><span class="z-variable z-other z-member z-tyml">setting</span><span class="z-punctuation z-separator z-key-value z-tyml">:</span><span class="z-text z-whitespace"> </span><span class="z-storage z-type z-tyml">string</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-attribute z-tyml">@</span><span class="z-keyword z-operator z-attribute z-tyml">length</span><span class="z-text z-whitespace"> </span><span class="z-constant z-numeric z-integer z-tyml">0</span>..&lt;<span class="z-constant z-numeric z-integer z-tyml">100</span><span class="z-text z-whitespace">
+</span></span></code></pre>
+<p>数値の範囲指定方法は<code>@value</code>と同一です</p>
+<h2 id="u8sizeatoribiyuto"><code>@u8size</code>アトリビュート<a class="zola-anchor" href="#u8sizeatoribiyuto" aria-label="Anchor link for: u8sizeatoribiyuto">🔗</a></h2>
+<p>文字列型<code>string</code>のUTF-8バイト数を制限することができます</p>
+<pre data-lang="tyml" class="language-tyml z-code"><code class="language-tyml" data-lang="tyml"><span class="z-source z-tyml"><span class="z-variable z-other z-member z-tyml">setting</span><span class="z-punctuation z-separator z-key-value z-tyml">:</span><span class="z-text z-whitespace"> </span><span class="z-storage z-type z-tyml">string</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-attribute z-tyml">@</span><span class="z-keyword z-operator z-attribute z-tyml">u8size</span><span class="z-text z-whitespace"> </span><span class="z-constant z-numeric z-integer z-tyml">0</span>..&lt;<span class="z-constant z-numeric z-integer z-tyml">100</span><span class="z-text z-whitespace">
+</span></span></code></pre>
+<p>数値の範囲指定方法は<code>@value</code>と同一です</p>
+<h2 id="regexatoribiyuto"><code>@regex</code>アトリビュート<a class="zola-anchor" href="#regexatoribiyuto" aria-label="Anchor link for: regexatoribiyuto">🔗</a></h2>
+<p>文字列型<code>string</code>の文字列形式を正規表現で制限することができます</p>
+<pre data-lang="tyml" class="language-tyml z-code"><code class="language-tyml" data-lang="tyml"><span class="z-source z-tyml"><span class="z-comment z-line z-double-slash z-tyml"><span class="z-punctuation z-definition z-comment z-tyml">//</span> &#39;で囲うとエスケープされません
+</span></span><span class="z-source z-tyml"><span class="z-variable z-other z-member z-tyml">setting</span><span class="z-punctuation z-separator z-key-value z-tyml">:</span><span class="z-text z-whitespace"> </span><span class="z-storage z-type z-tyml">string</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-attribute z-tyml">@</span><span class="z-keyword z-operator z-attribute z-tyml">regex</span><span class="z-text z-whitespace"> </span><span class="z-string z-quoted z-double z-tyml"><span class="z-punctuation z-definition z-string z-begin z-tyml">&#39;</span>^\d+$<span class="z-punctuation z-definition z-string z-end z-tyml">&#39;</span></span><span class="z-text z-whitespace">
+</span></span></code></pre>
+<h2 id="fu-shu-notiao-jian">複数の条件<a class="zola-anchor" href="#fu-shu-notiao-jian" aria-label="Anchor link for: fu-shu-notiao-jian">🔗</a></h2>
+<p><code>and</code>や<code>or</code>を使うことで型の条件を複数記述できます</p>
+<pre data-lang="tyml" class="language-tyml z-code"><code class="language-tyml" data-lang="tyml"><span class="z-source z-tyml"><span class="z-comment z-line z-double-slash z-tyml"><span class="z-punctuation z-definition z-comment z-tyml">//</span> andのほうが優先度が高いです
+</span></span><span class="z-source z-tyml"><span class="z-comment z-line z-double-slash z-tyml"><span class="z-punctuation z-definition z-comment z-tyml">//</span> ()で囲うと優先度を変更できます
+</span></span><span class="z-source z-tyml"><span class="z-variable z-other z-member z-tyml">setting</span><span class="z-punctuation z-separator z-key-value z-tyml">:</span><span class="z-text z-whitespace"> </span><span class="z-storage z-type z-tyml">string</span><span class="z-text z-whitespace"> </span>(<span class="z-keyword z-operator z-attribute z-tyml">@</span><span class="z-keyword z-operator z-attribute z-tyml">length</span><span class="z-text z-whitespace"> </span><span class="z-constant z-numeric z-integer z-tyml">0</span>..&lt;<span class="z-constant z-numeric z-integer z-tyml">10</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-logical z-tyml">or</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-attribute z-tyml">@</span><span class="z-keyword z-operator z-attribute z-tyml">length</span><span class="z-text z-whitespace"> </span><span class="z-constant z-numeric z-integer z-tyml">100</span>..&lt;<span class="z-constant z-numeric z-integer z-tyml">200</span><span class="z-punctuation z-section z-group z-end z-tyml">)</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-logical z-tyml">and</span><span class="z-text z-whitespace"> </span><span class="z-keyword z-operator z-attribute z-tyml">@</span><span class="z-keyword z-operator z-attribute z-tyml">regex</span><span class="z-text z-whitespace"> </span><span class="z-string z-quoted z-double z-tyml"><span class="z-punctuation z-definition z-string z-begin z-tyml">&#39;</span>^\d+$<span class="z-punctuation z-definition z-string z-end z-tyml">&#39;</span></span><span class="z-text z-whitespace">
+</span></span></code></pre>
+
+
+                </div>
+            </div>
+
+            <div class="prev-link">
+                
+    
+        
+        
+        <a class="previous" href="https://tyml-org.github.io/tyml-docs-jp/chapter2/"><</a>
+    
+
+            </div>
+
+            <div class="next-link">
+                
+    
+        <a class="next" href="https://tyml-org.github.io/tyml-docs-jp/chapter2/ebnf/">></a>
+    
+
+            </div>
+        </div>
+
+        
+            
+            <script type="text/javascript" src="https://tyml-org.github.io/tyml-docs-jp/elasticlunr.min.js"></script>
+            <script type="text/javascript" src="https://tyml-org.github.io/tyml-docs-jp/search_index.en.js"></script>
+            
+            <script type="text/javascript" src="https://tyml-org.github.io/tyml-docs-jp/book.js"></script>
+        
+    </body>
+
+</html>
