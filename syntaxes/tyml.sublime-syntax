@@ -11,6 +11,7 @@ variables:
   ident: '[A-Za-z_][A-Za-z0-9_]*'
   number: '\d+'
   range_op: '\\.\\.(?:=|<)?'   # ..  ..=  ..<
+  member_key: '(?:\*|[A-Za-z_][A-Za-z0-9_]*)'  # identifier OR wildcard '*'
 
 # ---------------------------------------------------------------------------
 #  Contexts  ----------------------------------------------------------------
@@ -29,8 +30,8 @@ contexts:
       scope: keyword.declaration.enum.tyml
       push: enum-decl
 
-    # setting key (top-level inline struct) ---------------------------------
-    - match: '{{ident}}(?=\s*:)'  # setting name
+    # setting key (identifier or '*') --------------------------------------
+    - match: '{{member_key}}(?=\s*:)'  # wildcard or ident
       scope: variable.other.member.tyml
       push: value-decl
 
@@ -177,18 +178,47 @@ contexts:
   attribute:
     - include: skp-inline
 
-    - match: '\b(in|length|regex)\b'
+    # left parenthesis (for grouping) ------------------------------------
+    - match: '\('
+      scope: punctuation.section.group.begin.tyml
+
+    # right parenthesis ---------------------------------------------------
+    - match: '\)'
+      scope: punctuation.section.group.end.tyml
+
+    # logical operators ---------------------------------------------------
+    - match: '(and|or)'
+      scope: keyword.operator.logical.tyml
+
+    # attribute name ------------------------------------------------------
+    - match: '(value|length|u8size|regex)'
+      scope: keyword.operator.attribute.tyml
+
+    # keyword 'in' used in range cond ------------------------------------
+    - match: 'in'
       scope: keyword.other.attribute.tyml
 
+    # range operator (.. ..= ..<) ---------------------------------------
     - match: '{{range_op}}'
       scope: keyword.operator.range.tyml
 
+    # literals (numbers, strings) ----------------------------------------
     - include: literals
 
+    # allow chaining, default assign, or termination ---------------------
     - match: '(?=@|=|,|\n|})'
       pop: true
 
   default-value:
+    - include: skp-inline
+    - include: literals
+    - match: '(?=,|\n|})'
+      pop: true
+
+    - include: skp-inline
+    - include: literals
+    - match: '(?=,|\n|})'
+      pop: true
     - include: skp-inline
     - include: literals
     - match: '(?=,|\n|})'
@@ -200,7 +230,8 @@ contexts:
   object-elements:
     - include: skp-line
 
-    - match: '{{ident}}(?=\s*:)'  # member key
+    # member key (ident or '*') -------------------------------------------
+    - match: '{{member_key}}(?=\s*:)'  # wildcard or ident
       scope: variable.other.member.tyml
       push: value-decl
 
@@ -215,7 +246,7 @@ contexts:
   #  Literals --------------------------------------------------------------
   # -----------------------------------------------------------------------
   literals:
-    - match: '"'
+    - match: "\"|'"
       scope: punctuation.definition.string.begin.tyml
       push: dq-string
 
@@ -224,6 +255,6 @@ contexts:
 
   dq-string:
     - meta_scope: string.quoted.double.tyml
-    - match: '"'
+    - match: "\"|'"
       scope: punctuation.definition.string.end.tyml
       pop: true

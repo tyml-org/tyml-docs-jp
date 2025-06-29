@@ -1,6 +1,6 @@
 +++
 title = "EBNF"
-weight = 5
+weight = 6
 +++
 
 ## より厳密な文法規則
