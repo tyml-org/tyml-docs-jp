@@ -42,3 +42,11 @@ setting: string @u8size 0..<100
 // 'で囲うとエスケープされません
 setting: string @regex '^\d+$'
 ```
+
+## 複数の条件
+`and`や`or`を使うことで型の条件を複数記述できます
+```tyml
+// andのほうが優先度が高いです
+// ()で囲うと優先度を変更できます
+setting: string (@length 0..<10 or @length 100..<200) and @regex '^\d+$'
+```
