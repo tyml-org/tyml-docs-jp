@@ -10,9 +10,13 @@ TYMLは任意の設定用言語に対して型検査やエディタ支援を行�
 現在は以下の設定用言語に対応しています。
 - `ini`
 - `toml`
+- `json`
 
 ## 簡単な仕様紹介
 TYMLは競合の`JsonSchema`よりも直感的かつ厳密な仕様を両立できるように設計されています。
+
+また、`Open-API`のようにREST-APIのスキーマを定義することもできます。
+
 ここでは簡単に、TYMLがどのような文法で記述されるのかを紹介します。
 
 ```tyml
@@ -44,6 +48,25 @@ nullable: int?
 
 /// "|"で型を区切ることで両端の型のうちいずれかがの値であれば受理されるようになります
 or_type: int | string
+
+
+/// REST-APIを定義することもできます！
+/// もちろん型生成ツール(tyml-api-generator)を使用してコードを生成できます
+/// ここに書いたドキュメントは生成時にも反映されます
+interface API {
+    function register(id: int = 100, name: string = "test") -> string {
+        return "* Secret Token *"
+    }
+
+    authed function get_user(@claim: Claim) -> User {
+        return { id = 100, name = "test" }
+    }
+
+    #[kind = "get"]
+    function hello() -> string {
+        return "Hello, world!"
+    }
+}
 ```
 
 さらに設定用言語で以下のように記述することで型チェックやエディタ支援を有効化できます

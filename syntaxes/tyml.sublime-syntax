@@ -19,9 +19,13 @@ variables:
 contexts:
   # ==== entry ==============================================================
   main:
-    - include: skp-line           # parses whitespace + comments at top level
+    - include: skp-line
 
     # keyword-driven blocks --------------------------------------------------
+    - match: '\binterface\b'
+      scope: keyword.declaration.interface.tyml
+      push: interface-decl
+
     - match: '\btype\b'
       scope: keyword.declaration.type.tyml
       push: type-decl
@@ -82,6 +86,160 @@ contexts:
     - include: comment-line
 
   # -----------------------------------------------------------------------
+  #  interface  ------------------------------------------------------------
+  # -----------------------------------------------------------------------
+  interface-decl:
+    - include: skp-inline
+    - match: '{{ident}}'
+      scope: entity.name.type.interface.tyml
+      set: interface-after-name
+
+  interface-after-name:
+    - include: skp-inline
+    - match: '{'
+      scope: punctuation.section.block.begin.tyml
+      set: interface-body
+
+  interface-body:
+    - meta_scope: meta.block.interface.tyml
+    - include: skp-line
+
+    # authed function / function ------------------------------------------
+    - match: '\b(?:(authed)\s+)?(function)\b'
+      captures:
+        1: storage.modifier.security.tyml
+        2: keyword.declaration.function.tyml
+      push: func-after-keyword
+
+    - match: '}'
+      scope: punctuation.section.block.end.tyml
+      pop: true
+
+  # -----------------------------------------------------------------------
+  #  function  -------------------------------------------------------------
+  # -----------------------------------------------------------------------
+  func-after-keyword:
+    - include: skp-inline
+    - match: '{{ident}}'
+      scope: entity.name.function.tyml
+      set: func-after-name
+
+  func-after-name:
+    - include: skp-inline
+    - match: '\('
+      scope: punctuation.section.group.begin.parameters.tyml
+      set: params
+
+  params:
+    - meta_scope: meta.function.parameters.tyml
+    - include: skp-inline
+
+    # 「@claim: Type」のように @xxx がキーのケース（型までハイライト）
+    - match: '@{{ident}}(?=\s*:)'
+      scope: storage.type.annotation.parameter.tyml
+      push: annot-param-after-key
+
+    # 「@body user: User」等の将来拡張用（@xxx 単独）
+    - match: '@{{ident}}'
+      scope: storage.type.annotation.parameter.tyml
+
+    # param name
+    - match: '{{ident}}(?=\s*:)'
+      scope: variable.parameter.tyml
+      push: param-after-name
+
+    - match: ','
+      scope: punctuation.separator.parameter.tyml
+
+    - match: '\)'
+      scope: punctuation.section.group.end.parameters.tyml
+      set: func-after-params
+
+  annot-param-after-key:
+    - include: skp-inline
+    - match: ':'
+      scope: punctuation.separator.type.annotation.tyml
+      set: annot-param-type
+
+  annot-param-type:
+    - include: skp-inline
+    - include: type-usage
+    - match: '='
+      scope: punctuation.separator.key-value.default.tyml
+      set: param-default
+    - match: '(?=,|\))'
+      pop: true
+
+  param-after-name:
+    - include: skp-inline
+    - match: ':'
+      scope: punctuation.separator.type.annotation.tyml
+      set: param-type
+
+  param-type:
+    - include: skp-inline
+    - include: type-usage
+    - match: '='
+      scope: punctuation.separator.key-value.default.tyml
+      set: param-default
+    - match: '(?=,|\))'
+      pop: true
+
+  # カンマ/右括弧を先に判定してから expr を読む（取りこぼし防止）
+  param-default:
+    - include: skp-inline
+    - match: '(?=,|\))'
+      pop: true
+    - include: expr
+
+  func-after-params:
+    - include: skp-inline
+
+    # return type arrow
+    - match: '->'
+      scope: punctuation.separator.return-type.tyml
+      push: return-type
+
+    # function body
+    - match: '{'
+      scope: punctuation.section.block.begin.function.tyml
+      set: func-body
+
+  return-type:
+    - include: skp-inline
+    - include: type-usage
+    - match: '(?={)'
+      pop: true
+
+  func-body:
+    - meta_scope: meta.block.function.body.tyml
+    - include: skp-line
+
+    - match: '\breturn\b'
+      scope: keyword.control.return.tyml
+      push: return-expr
+
+    - match: '{'
+      scope: punctuation.section.block.begin.tyml
+      push: object-literal
+
+    - match: '\['
+      scope: punctuation.section.brackets.begin.array.tyml
+      push: array-literal
+
+    - include: expr
+
+    - match: '}'
+      scope: punctuation.section.block.end.function.tyml
+      pop: true
+
+  return-expr:
+    - include: skp-inline
+    - include: expr
+    - match: '(?=}|$)'
+      pop: true
+
+  # -----------------------------------------------------------------------
   #  type  -----------------------------------------------------------------
   # -----------------------------------------------------------------------
   type-decl:
@@ -127,7 +285,7 @@ contexts:
       pop: true
 
   # -----------------------------------------------------------------------
-  #  Property / Value ------------------------------------------------------
+  #  Property / Value (schema) --------------------------------------------
   # -----------------------------------------------------------------------
   value-decl:
     - include: skp-inline
@@ -139,31 +297,44 @@ contexts:
   type-spec:
     - include: skp-inline
 
-    # explicit type name segment -----------------------------------------
-    - match: '{{ident}}'
-      scope: storage.type.tyml
+    # primitive types → 宣言と同じ色
+    - match: '\b(int|string)\b'
+      scope: entity.name.type.tyml
 
-    # union operator ------------------------------------------------------
+    # explicit type name segment → 宣言と同じ色
+    - match: '{{ident}}'
+      scope: entity.name.type.tyml
+
+    # optional type suffix
+    - match: '\?'
+      scope: keyword.operator.optional.tyml
+
+    # union operator
     - match: '\|'
       scope: keyword.operator.union.tyml
 
-    # inline struct -------------------------------------------------------
+    # array type: [Type]
+    - match: '\['
+      scope: punctuation.section.brackets.begin.type.tyml
+      push: array-type
+
+    # inline struct
     - match: '{'
       scope: punctuation.section.block.begin.tyml
       push: inline-struct
 
-    # attribute list ------------------------------------------------------
+    # attribute list
     - match: '@'
       scope: keyword.operator.attribute.tyml
       push: attribute
 
-    # default value -------------------------------------------------------
+    # default value
     - match: '='
       scope: punctuation.separator.key-value.default.tyml
       set: default-value
 
-    # declaration terminator ---------------------------------------------
-    - match: '(?=,|\n|})'
+    # declaration terminator
+    - match: '(?=,|\n|}|\))'
       pop: true
 
   # --- inline struct context ---------------------------------------------
@@ -178,59 +349,42 @@ contexts:
   attribute:
     - include: skp-inline
 
-    # left parenthesis (for grouping) ------------------------------------
     - match: '\('
       scope: punctuation.section.group.begin.tyml
 
-    # right parenthesis ---------------------------------------------------
     - match: '\)'
       scope: punctuation.section.group.end.tyml
 
-    # logical operators ---------------------------------------------------
     - match: '(and|or)'
       scope: keyword.operator.logical.tyml
 
-    # attribute name ------------------------------------------------------
     - match: '(value|length|u8size|regex)'
       scope: keyword.operator.attribute.tyml
 
-    # keyword 'in' used in range cond ------------------------------------
     - match: 'in'
       scope: keyword.other.attribute.tyml
 
-    # range operator (.. ..= ..<) ---------------------------------------
     - match: '{{range_op}}'
       scope: keyword.operator.range.tyml
 
-    # literals (numbers, strings) ----------------------------------------
     - include: literals
 
-    # allow chaining, default assign, or termination ---------------------
-    - match: '(?=@|=|,|\n|})'
+    - match: '(?=@|=|,|\n|}|\))'
       pop: true
 
+  # default value for schema
   default-value:
     - include: skp-inline
-    - include: literals
-    - match: '(?=,|\n|})'
+    - match: '(?=,|\n|}|\))'
       pop: true
-
-    - include: skp-inline
-    - include: literals
-    - match: '(?=,|\n|})'
-      pop: true
-    - include: skp-inline
-    - include: literals
-    - match: '(?=,|\n|})'
-      pop: true
+    - include: expr
 
   # -----------------------------------------------------------------------
-  #  Object elements -------------------------------------------------------
+  #  Object elements (schema) ---------------------------------------------
   # -----------------------------------------------------------------------
   object-elements:
     - include: skp-line
 
-    # member key (ident or '*') -------------------------------------------
     - match: '{{member_key}}(?=\s*:)'  # wildcard or ident
       scope: variable.other.member.tyml
       push: value-decl
@@ -243,12 +397,99 @@ contexts:
       pop: true
 
   # -----------------------------------------------------------------------
+  #  Type usage (for params / return types) --------------------------------
+  # -----------------------------------------------------------------------
+  type-usage:
+    - include: skp-inline
+    - match: '\b(int|string)\b'
+      scope: entity.name.type.tyml
+    - match: '{{ident}}'
+      scope: entity.name.type.tyml
+    - match: '\?'
+      scope: keyword.operator.optional.tyml
+    - match: '\|'
+      scope: keyword.operator.union.tyml
+    - match: '\['
+      scope: punctuation.section.brackets.begin.type.tyml
+      push: array-type
+
+  array-type:
+    - meta_scope: meta.type.array.tyml
+    - include: skp-inline
+    - match: '\b(int|string)\b'
+      scope: entity.name.type.tyml
+    - match: '{{ident}}'
+      scope: entity.name.type.tyml
+    - match: '\]'
+      scope: punctuation.section.brackets.end.type.tyml
+      pop: true
+
+  # -----------------------------------------------------------------------
+  #  Expressions (for function bodies / defaults) -------------------------
+  # -----------------------------------------------------------------------
+  expr:
+    - include: literals
+
+    - match: '{{ident}}'
+      scope: variable.other.readwrite.tyml
+
+    - match: '{'
+      scope: punctuation.section.block.begin.object.tyml
+      push: object-literal
+
+    - match: '\['
+      scope: punctuation.section.brackets.begin.array.tyml
+      push: array-literal
+
+    - match: ','
+      scope: punctuation.separator.comma.tyml
+
+  array-literal:
+    - meta_scope: meta.sequence.array.tyml
+    - include: skp-inline
+    - include: expr
+    - match: '\]'
+      scope: punctuation.section.brackets.end.array.tyml
+      pop: true
+
+  object-literal:
+    - meta_scope: meta.mapping.object.tyml
+    - include: skp-line
+
+    - match: '{{ident}}(?=\s*=)'
+      scope: variable.other.member.tyml
+      push: obj-after-key
+
+    - match: ','
+      scope: punctuation.separator.comma.tyml
+
+    - match: '}'
+      scope: punctuation.section.block.end.object.tyml
+      pop: true
+
+  obj-after-key:
+    - include: skp-inline
+    - match: '='
+      scope: punctuation.separator.key-value.assignment.tyml
+      set: obj-value
+
+  # カンマ/閉じカッコを先に見てから値式へ（取りこぼし防止）
+  obj-value:
+    - include: skp-inline
+    - match: '(?=,|})'
+      pop: true
+    - include: expr
+
+  # -----------------------------------------------------------------------
   #  Literals --------------------------------------------------------------
   # -----------------------------------------------------------------------
   literals:
     - match: "\"|'"
       scope: punctuation.definition.string.begin.tyml
       push: dq-string
+
+    - match: '\b(true|false)\b'
+      scope: constant.language.boolean.tyml
 
     - match: '{{number}}'
       scope: constant.numeric.integer.tyml
@@ -258,3 +499,4 @@ contexts:
     - match: "\"|'"
       scope: punctuation.definition.string.end.tyml
       pop: true
+
