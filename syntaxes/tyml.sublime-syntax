@@ -200,15 +200,20 @@ contexts:
       scope: punctuation.separator.return-type.tyml
       push: return-type
 
-    # function body
+    # function body（あり）
     - match: '{'
       scope: punctuation.section.block.begin.function.tyml
       set: func-body
 
+    # function body（なし）: 改行 or インターフェースの '}' で終端
+    - match: '(?=,|\n|})'
+      pop: true
+
   return-type:
     - include: skp-inline
     - include: type-usage
-    - match: '(?={)'
+    # 本体あり: '{' の直前、または 本体なし: 改行/'}' の直前で抜ける
+    - match: '(?={|\n|})'
       pop: true
 
   func-body:

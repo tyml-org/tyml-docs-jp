@@ -6,7 +6,7 @@ weight = 1
 ## 1. VSCode拡張機能をダウンロード
 VSCodeマーケットプレイスから[`TYML for VSCode`](https://marketplace.visualstudio.com/items?itemName=bea4dev.tyml-lsp-vscode)をダウンロードします。
 
-![tyml_vscode](tyml_vscode.png)
+![tyml_vscode](https://tyml-org.github.io/tyml-docs-jp/chapter3/tyml_vscode.png)
 
 ## 2. APIを定義する
 適当な場所にファイル`api.tyml`を作成してください。
