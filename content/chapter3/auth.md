@@ -114,3 +114,24 @@ async fn main() {
     serve(server, "localhost:3000").await.unwrap();
 }
 ```
+
+また、クライアント側のメソッドの第一引数にはトークンが要求されるようになります。
+```ts
+class API {
+    //...
+    // authedを指定したメソッドは__token: stringが第一引数として生成される
+    public async get_user_name(__token: string): Promise<string> {
+        //...
+    }
+}
+```
+```ts
+async function main() {
+    const api = new API("http://localhost:3000");
+
+    const token = await api.register("typescript user!");
+
+    // registerで返却されたトークンを用いてリクエストを送信する
+    const name = await api.get_user_name(token.token);
+}
+```
