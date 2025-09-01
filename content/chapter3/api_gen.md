@@ -65,7 +65,7 @@ tyml-api-gen client <KIND> <TYML> <DIR> [NAME]
 それぞれの引数の取れる値は以下のとおりです。
 ```
  - KIND: 生成するクライアントの種類
-    指定できる値: typescript
+    指定できる値: typescript, rust
 
  - TYML: 生成に使用するTYMLファイル
 
